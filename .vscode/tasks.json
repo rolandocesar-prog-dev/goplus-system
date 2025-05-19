@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flutter: Run Cliente App",
+      "type": "shell",
+      "command": "cd apps/cliente && flutter run",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Run Repartidor App",
+      "type": "shell",
+      "command": "cd apps/repartidor && flutter run",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Run Negocio App (Web)",
+      "type": "shell",
+      "command": "cd apps/negocio && flutter run -d chrome",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Run Admin App (Web)",
+      "type": "shell",
+      "command": "cd apps/admin && flutter run -d chrome",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Get All Dependencies",
+      "type": "shell",
+      "command": "./tools/scripts/setup/setup_project.ps1",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flutter: Run All Tests",
+      "type": "shell",
+      "command": "./tools/scripts/ci/run_tests.ps1",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

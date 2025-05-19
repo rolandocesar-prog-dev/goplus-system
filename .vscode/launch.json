@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Cliente Debug",
+      "request": "launch",
+      "type": "dart",
+      "program": "apps/cliente/lib/main.dart",
+      "args": []
+    },
+    {
+      "name": "Repartidor Debug",
+      "request": "launch",
+      "type": "dart",
+      "program": "apps/repartidor/lib/main.dart",
+      "args": []
+    },
+    {
+      "name": "Negocio Debug (Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "apps/negocio/lib/main.dart",
+      "args": ["-d", "chrome"]
+    },
+    {
+      "name": "Admin Debug (Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "apps/admin/lib/main.dart",
+      "args": ["-d", "chrome"]
+    }
+  ]
+}
