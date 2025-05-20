@@ -1,0 +1,15 @@
+name: goplus_system
+description: GoPlus delivery system - monorepo for all applications
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+# Solo dependencias de desarrollo para el workspace root
+dev_dependencies:
+  flutter_lints: ^3.0.0
+
+# Configuración para hacer que este sea un workspace de packages
+# No necesitamos dependencias productivas aquí
+dependencies:
