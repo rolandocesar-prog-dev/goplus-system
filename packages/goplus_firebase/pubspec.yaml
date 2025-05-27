@@ -1,6 +1,7 @@
 name: goplus_firebase
 description: Firebase services abstractions for GoPlus applications
 version: 1.0.0+1
+publish_to: none # Agregar esta línea
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -14,14 +15,24 @@ dependencies:
   goplus_core:
     path: ../goplus_core
 
-  # Firebase packages
+  # ------Firebase packages-------
+
+  # Inicialización base de Firebase
   firebase_core: ^2.24.2
+
+  # Autenticación (login con Google/Apple, verificación SMS)
   firebase_auth: ^4.15.3
+
+  # Base de datos en tiempo real para pedidos, menús, usuarios
   cloud_firestore: ^4.13.6
+
+  # Almacenamiento de imágenes (fotos de productos, avatares)
   firebase_storage: ^11.5.6
+
+  # Notificaciones push (estado del pedido, promociones)
   firebase_messaging: ^14.7.10
 
-  # Additional Firebase utilities
+  # Protege las APIs contra uso no autorizado
   firebase_app_check: ^0.2.1+7
 
 dev_dependencies:
@@ -29,7 +40,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
 
-  # Firebase testing
+  # Simula Firestore para pruebas sin afectar datos reales
   fake_cloud_firestore: ^2.4.1+1
 
 flutter:

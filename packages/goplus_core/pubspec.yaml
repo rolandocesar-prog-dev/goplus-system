@@ -1,6 +1,7 @@
 name: goplus_core
 description: Core shared library for GoPlus applications containing models, services, theme and common widgets
 version: 1.0.0+1
+publish_to: none # Agregar esta línea
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -10,16 +11,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # State Management
+  # Facilita la comparación de objetos en el estado de la app, especialmente útil para modelos de datos como pedidos y usuarios
   equatable: ^2.0.5
 
-  # Local Storage
+  # Guarda configuraciones del usuario (preferencias, sesión activa, direcciones favoritas)
   shared_preferences: ^2.2.2
 
-  # JSON serialization
+  # Convierte automáticamente entre objetos Dart y JSON para comunicación con APIs
   json_annotation: ^4.8.1
 
-  # Utilities
+  # Formateo de fechas, números y monedas (precios, horarios de entrega)
   intl: ^0.18.1
 
 dev_dependencies:

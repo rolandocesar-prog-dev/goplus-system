@@ -1,6 +1,7 @@
 name: goplus_ui
 description: Advanced UI components, animations and layouts for GoPlus applications
 version: 1.0.0+1
+publish_to: none # Agregar esta línea
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -14,18 +15,22 @@ dependencies:
   goplus_core:
     path: ../goplus_core
 
-  # UI and Animations
+  # Animaciones fluidas entre pantallas y estados
   animations: ^2.0.8
+
+  # Grillas personalizadas para mostrar menús y productos
   flutter_staggered_grid_view: ^0.7.0
+
+  # Iconos vectoriales escalables
   flutter_svg: ^2.0.9
 
-  # Image handling
+  # Carga y caché eficiente de imágenes de productos
   cached_network_image: ^3.3.1
 
-  # Loading indicators
+  # Efectos de carga elegantes mientras cargan datos
   shimmer: ^3.0.0
 
-  # Charts and graphs
+  # Gráficos para estadísticas de ventas y reportes
   fl_chart: ^0.66.0
 
 dev_dependencies:
@@ -33,7 +38,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
 
-  # Golden tests for UI
+  # Pruebas visuales para mantener consistencia en la UI
   golden_toolkit: ^0.15.0
 
 flutter:
