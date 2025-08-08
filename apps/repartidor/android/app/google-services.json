@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "412786276962",
+    "project_id": "goplus-system",
+    "storage_bucket": "goplus-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412786276962:android:0a6fb1e57a2131ef62ef3b",
+        "android_client_info": {
+          "package_name": "com.goplus.cliente.goplus_cliente"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412786276962-gu04hpjg696ku9dd0akl8tprmcu5huqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeuGnaqTCnspLvyNtLQic7TToxRpZI3So"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412786276962-gu04hpjg696ku9dd0akl8tprmcu5huqn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "412786276962-3o1j03nkql1e0f7fucevvtfbki5b5udc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goplus.cliente.goplusCliente"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412786276962:android:266850b93266334562ef3b",
+        "android_client_info": {
+          "package_name": "com.goplus.repartidor.goplus_repartidor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412786276962-gu04hpjg696ku9dd0akl8tprmcu5huqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeuGnaqTCnspLvyNtLQic7TToxRpZI3So"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412786276962-gu04hpjg696ku9dd0akl8tprmcu5huqn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "412786276962-3o1j03nkql1e0f7fucevvtfbki5b5udc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goplus.cliente.goplusCliente"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
