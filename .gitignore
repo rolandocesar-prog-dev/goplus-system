@@ -10,6 +10,8 @@ firebase/functions/node_modules/
 firebase/functions/npm-debug.log*
 firebase/functions/lib/
 firebase/functions/.runtimeconfig.json
+firebase/node_modules
+functions/node_modules
 
 # Firebase Hosting
 firebase/hosting/node_modules/
