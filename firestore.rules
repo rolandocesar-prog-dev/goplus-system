@@ -2,20 +2,147 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Usuarios pueden leer/escribir sus propios datos
+    
+    // USUARIOS - Solo pueden acceder a sus propios datos
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId 
+        && isValidUserData();
     }
     
-    // Pedidos - reglas más específicas
-    match /orders/{orderId} {
-      allow read, write: if request.auth != null;
-    }
-    
-    // Negocios - solo admins pueden escribir
+    // NEGOCIOS - Control granular por rol
     match /businesses/{businessId} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.token.role == 'admin';
+      allow write: if request.auth != null && (
+        isBusinessOwner(businessId) || 
+        hasRole('admin')
+      );
+      allow create: if request.auth != null && isValidBusinessData();
+    }
+    
+    // PEDIDOS - Control por participantes
+    match /orders/{orderId} {
+      allow read: if request.auth != null && (
+        isOrderParticipant(orderId) ||
+        hasRole('admin') ||
+        hasRole('support')
+      );
+      allow write: if request.auth != null && (
+        isOrderOwner(orderId) ||
+        isAssignedDelivery(orderId) ||
+        isBusinessOwner(getOrderBusinessId(orderId))
+      );
+      allow create: if request.auth != null && isValidOrderData();
+    }
+    
+    // REPARTIDORES - Solo datos propios y pedidos asignados
+    match /delivery_drivers/{driverId} {
+      allow read, write: if request.auth != null && (
+        request.auth.uid == driverId ||
+        hasRole('admin')
+      );
+    }
+    
+    // UBICACIONES - Solo repartidores activos
+    match /driver_locations/{driverId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        request.auth.uid == driverId &&
+        isActiveDriver();
+    }
+    
+    // PAGOS - Solo lectura para participantes
+    match /payments/{paymentId} {
+      allow read: if request.auth != null && isPaymentParticipant(paymentId);
+      allow write: if false; // Solo por Cloud Functions
+    }
+    
+    // ANALYTICS - Solo admins y business owners
+    match /analytics/{analyticsId} {
+      allow read: if request.auth != null && (
+        hasRole('admin') ||
+        hasRole('business_owner')
+      );
+      allow write: if false; // Solo por Cloud Functions
+    }
+    
+    // NOTIFICACIONES - Solo propias
+    match /notifications/{notificationId} {
+      allow read, write: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+    }
+    
+    // CONFIGURACIONES DEL SISTEMA - Solo admins
+    match /system_config/{configId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && hasRole('admin');
+    }
+    
+    // CUPONES Y PROMOCIONES
+    match /coupons/{couponId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        hasRole('admin') ||
+        isBusinessOwner(resource.data.businessId)
+      );
+    }
+    
+    // FUNCIONES DE VALIDACIÓN
+    function isValidUserData() {
+      return request.resource.data.keys().hasAll(['name', 'email', 'role']) &&
+             request.resource.data.role in ['cliente', 'repartidor', 'negocio', 'admin'];
+    }
+    
+    function isValidBusinessData() {
+      return request.resource.data.keys().hasAll(['name', 'category', 'address', 'ownerId']) &&
+             request.resource.data.ownerId == request.auth.uid;
+    }
+    
+    function isValidOrderData() {
+      return request.resource.data.keys().hasAll(['customerId', 'businessId', 'items', 'total', 'status']) &&
+             request.resource.data.customerId == request.auth.uid &&
+             request.resource.data.status == 'pending';
+    }
+    
+    function hasRole(role) {
+      return request.auth.token.role == role;
+    }
+    
+    function isBusinessOwner(businessId) {
+      return exists(/databases/$(database)/documents/businesses/$(businessId)) &&
+             get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
+    }
+    
+    function isOrderParticipant(orderId) {
+      let order = get(/databases/$(database)/documents/orders/$(orderId)).data;
+      return order.customerId == request.auth.uid ||
+             order.driverId == request.auth.uid ||
+             isBusinessOwner(order.businessId);
+    }
+    
+    function isOrderOwner(orderId) {
+      return get(/databases/$(database)/documents/orders/$(orderId)).data.customerId == request.auth.uid;
+    }
+    
+    function isAssignedDelivery(orderId) {
+      return get(/databases/$(database)/documents/orders/$(orderId)).data.driverId == request.auth.uid;
+    }
+    
+    function getOrderBusinessId(orderId) {
+      return get(/databases/$(database)/documents/orders/$(orderId)).data.businessId;
+    }
+    
+    function isActiveDriver() {
+      return exists(/databases/$(database)/documents/delivery_drivers/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/delivery_drivers/$(request.auth.uid)).data.status == 'active';
+    }
+    
+    function isPaymentParticipant(paymentId) {
+      let payment = get(/databases/$(database)/documents/payments/$(paymentId)).data;
+      let order = get(/databases/$(database)/documents/orders/$(payment.orderId)).data;
+      return order.customerId == request.auth.uid ||
+             order.driverId == request.auth.uid ||
+             isBusinessOwner(order.businessId);
     }
   }
 }

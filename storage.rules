@@ -1,12 +1,150 @@
 rules_version = '2';
-
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
+    
+    // FOTOS DE PERFIL DE USUARIOS
+    match /users/{userId}/profile/{fileName} {
+      // Solo el propietario puede subir/leer sus fotos
+      allow read, write: if request.auth != null && request.auth.uid == userId
+        && isValidImageFile(fileName);
+      
+      // Límite de tamaño: 5MB
+      allow write: if resource.size < 5 * 1024 * 1024;
+    }
+    
+    // IMÁGENES DE NEGOCIOS
+    match /businesses/{businessId}/{folder}/{fileName} {
+      // Solo el dueño del negocio o admins pueden subir
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        isBusinessOwner(businessId) || 
+        hasRole('admin')
+      ) && isValidImageFile(fileName);
+      
+      // Límite de tamaño: 10MB para imágenes de negocio
+      allow write: if resource.size < 10 * 1024 * 1024;
+    }
+    
+    // IMÁGENES DE PRODUCTOS
+    match /products/{businessId}/{productId}/{fileName} {
+      // Solo el dueño del negocio puede gestionar fotos de productos
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        isBusinessOwner(businessId) &&
+        isValidImageFile(fileName);
+      
+      // Límite de tamaño: 8MB para productos
+      allow write: if resource.size < 8 * 1024 * 1024;
+    }
+    
+    // DOCUMENTOS DE VERIFICACIÓN (RUC, Licencias, etc.)
+    match /documents/{businessId}/verification/{fileName} {
+      // Solo el dueño del negocio puede subir documentos
+      allow read: if request.auth != null && (
+        isBusinessOwner(businessId) || 
+        hasRole('admin') ||
+        hasRole('support')
+      );
+      allow write: if request.auth != null && 
+        isBusinessOwner(businessId) &&
+        isValidDocumentFile(fileName);
+      
+      // Límite de tamaño: 15MB para documentos
+      allow write: if resource.size < 15 * 1024 * 1024;
+    }
+    
+    // DOCUMENTOS DE REPARTIDORES (Licencia, etc.)
+    match /drivers/{driverId}/documents/{fileName} {
+      // Solo el repartidor o admins pueden gestionar documentos
+      allow read: if request.auth != null && (
+        request.auth.uid == driverId ||
+        hasRole('admin') ||
+        hasRole('support')
+      );
+      allow write: if request.auth != null && 
+        request.auth.uid == driverId &&
+        isValidDocumentFile(fileName);
+      
+      // Límite de tamaño: 10MB
+      allow write: if resource.size < 10 * 1024 * 1024;
+    }
+    
+    // CAPTURAS DE PANTALLA DE EVIDENCIA (Entregas)
+    match /delivery_evidence/{orderId}/{fileName} {
+      // Solo el repartidor asignado puede subir evidencia
+      allow read: if request.auth != null && (
+        isOrderParticipant(orderId) ||
+        hasRole('admin') ||
+        hasRole('support')
+      );
+      allow write: if request.auth != null && 
+        isAssignedDelivery(orderId) &&
+        isValidImageFile(fileName);
+      
+      // Límite de tamaño: 5MB para evidencia
+      allow write: if resource.size < 5 * 1024 * 1024;
+    }
+    
+    // CONTENIDO PROMOCIONAL Y BANNERS
+    match /promotions/{businessId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        isBusinessOwner(businessId) ||
+        hasRole('admin')
+      ) && isValidImageFile(fileName);
+      
+      // Límite de tamaño: 8MB para promociones
+      allow write: if resource.size < 8 * 1024 * 1024;
+    }
+    
+    // REPORTES Y EXPORTS (Solo lectura para business owners)
+    match /reports/{businessId}/{fileName} {
+      allow read: if request.auth != null && (
+        isBusinessOwner(businessId) ||
+        hasRole('admin')
+      );
+      allow write: if false; // Solo por Cloud Functions
+    }
+    
+    // ARCHIVOS DEL SISTEMA (Solo admins)
+    match /system/{fileName} {
+      allow read: if request.auth != null && hasRole('admin');
+      allow write: if request.auth != null && hasRole('admin');
+    }
+    
+    // DENEGAR TODO LO DEMÁS
     match /{allPaths=**} {
       allow read, write: if false;
+    }
+    
+    // FUNCIONES DE VALIDACIÓN
+    function isValidImageFile(fileName) {
+      return fileName.matches('.*\\.(jpg|jpeg|png|webp)$') &&
+             fileName.size() <= 100; // Máximo 100 caracteres en nombre
+    }
+    
+    function isValidDocumentFile(fileName) {
+      return fileName.matches('.*\\.(pdf|jpg|jpeg|png|doc|docx)$') &&
+             fileName.size() <= 100;
+    }
+    
+    function hasRole(role) {
+      return request.auth.token.role == role;
+    }
+    
+    function isBusinessOwner(businessId) {
+      return firestore.get(/databases/(default)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
+    }
+    
+    function isOrderParticipant(orderId) {
+      let order = firestore.get(/databases/(default)/documents/orders/$(orderId)).data;
+      return order.customerId == request.auth.uid ||
+             order.driverId == request.auth.uid ||
+             isBusinessOwner(order.businessId);
+    }
+    
+    function isAssignedDelivery(orderId) {
+      return firestore.get(/databases/(default)/documents/orders/$(orderId)).data.driverId == request.auth.uid;
     }
   }
 }
