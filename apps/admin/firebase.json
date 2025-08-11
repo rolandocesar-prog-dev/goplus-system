@@ -1,14 +1,1 @@
-{
-  "flutter": {
-    "platforms": {
-      "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "goplus-system",
-          "configurations": {
-            "web": "1:412786276962:web:edfab9906c27732762ef3b"
-          }
-        }
-      }
-    }
-  }
-}
+{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"goplus-system","configurations":{"web":"1:412786276962:web:edfab9906c27732762ef3b"}}}}}}
