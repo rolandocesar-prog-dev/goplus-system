@@ -1,5 +1,5 @@
 name: goplus_negocio
-description: "A new Flutter project."
+description: "GoPlus Negocio - Dashboard para comercios"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -19,7 +19,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,8 +32,28 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # GoPlus packages
+  goplus_core:
+    path: ../../packages/goplus_core
+  goplus_firebase:
+    path: ../../packages/goplus_firebase
+  goplus_ui:
+    path: ../../packages/goplus_ui
+
+  # State Management
+  flutter_bloc: ^8.1.6
+
+  # Navigation
+  go_router: ^14.6.0
+
+  # File handling para web
+  file_picker: ^8.1.3
+  image_picker: ^1.1.2
+
+  # Charts para dashboard
+  fl_chart: ^1.0.0
+
+  # UI/UX
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
