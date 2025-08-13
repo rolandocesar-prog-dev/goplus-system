@@ -1,45 +1,39 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     
     <!-- ========================================= -->
-    <!-- PERMISOS PARA APP REPARTIDOR (EXTENDIDOS) -->
+    <!-- PERMISOS CRÍTICOS PARA REPARTIDOR -->
     <!-- ========================================= -->
     
-    <!-- Internet y red -->
+    <!-- Internet: Firebase, APIs -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
-    <!-- ⚠️ CRÍTICO: Ubicación en primer plano y segundo plano -->
+    <!-- ⚠️ CRÍTICO: Ubicación en tiempo real -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     
-    <!-- ⚠️ CRÍTICO: Servicios en segundo plano para tracking -->
+    <!-- ⚠️ CRÍTICO: Servicios en primer plano -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     
-    <!-- Cámara para QR de confirmación -->
+    <!-- Cámara: Confirmar entregas -->
     <uses-permission android:name="android.permission.CAMERA" />
     
-    <!-- ⚠️ CRÍTICO: Llamadas al cliente -->
+    <!-- Notificaciones críticas -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    
+    <!-- Opcional: Llamadas -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     
-    <!-- Notificaciones -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    
-    <!-- Opcional: Audio para alertas -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    
-    <!-- Features hardware -->
-    <uses-feature 
-        android:name="android.hardware.camera" 
-        android:required="false" />
+    <!-- Features críticas -->
     <uses-feature 
         android:name="android.hardware.location.gps" 
         android:required="true" />
     <uses-feature 
-        android:name="android.hardware.telephony" 
+        android:name="android.hardware.camera" 
         android:required="false" />
 
     <application
@@ -60,9 +54,9 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize">
             
+            <!-- Meta-data para Flutter -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -72,7 +66,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             
-            <!-- Deep links para asignación de pedidos -->
+            <!-- Deep links para repartidor -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -85,17 +79,6 @@
         <!-- ========================================= -->
         <!-- SERVICIOS CRÍTICOS PARA REPARTIDOR -->
         <!-- ========================================= -->
-        
-        <!-- ⚠️ CRÍTICO: Servicio de tracking de ubicación -->
-        <service
-            android:name=".LocationTrackingService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="location">
-            <intent-filter>
-                <action android:name="com.goplus.repartidor.LOCATION_SERVICE" />
-            </intent-filter>
-        </service>
         
         <!-- Firebase Messaging -->
         <service
@@ -110,23 +93,11 @@
         <!-- RECEIVERS -->
         <!-- ========================================= -->
         
-        <!-- Boot receiver para reiniciar servicios -->
-        <receiver 
-            android:name=".BootReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-        
-        <!-- Firebase messaging receiver -->
+        <!-- ✅ CORREGIDO: Firebase messaging receiver -->
         <receiver 
             android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
-            android:exported="false">
+            android:exported="true"
+            tools:replace="android:exported">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
