@@ -1,150 +1,213 @@
 rules_version = '2';
+
 service firebase.storage {
   match /b/{bucket}/o {
     
+    // =============================================
     // FOTOS DE PERFIL DE USUARIOS
+    // =============================================
     match /users/{userId}/profile/{fileName} {
-      // Solo el propietario puede subir/leer sus fotos
-      allow read, write: if request.auth != null && request.auth.uid == userId
-        && isValidImageFile(fileName);
-      
-      // Límite de tamaño: 5MB
-      allow write: if resource.size < 5 * 1024 * 1024;
+      allow read, write: if request.auth != null 
+        && request.auth.uid == userId
+        && isValidImageFile(fileName)
+        && request.resource.size < 5 * 1024 * 1024;
     }
     
+    // =============================================
     // IMÁGENES DE NEGOCIOS
+    // =============================================
     match /businesses/{businessId}/{folder}/{fileName} {
-      // Solo el dueño del negocio o admins pueden subir
       allow read: if request.auth != null;
-      allow write: if request.auth != null && (
-        isBusinessOwner(businessId) || 
-        hasRole('admin')
-      ) && isValidImageFile(fileName);
-      
-      // Límite de tamaño: 10MB para imágenes de negocio
-      allow write: if resource.size < 10 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && (isBusinessOwner(businessId) || hasRole('admin'))
+        && isValidImageFile(fileName)
+        && request.resource.size < 10 * 1024 * 1024;
     }
     
+    // =============================================
     // IMÁGENES DE PRODUCTOS
+    // =============================================
     match /products/{businessId}/{productId}/{fileName} {
-      // Solo el dueño del negocio puede gestionar fotos de productos
       allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        isBusinessOwner(businessId) &&
-        isValidImageFile(fileName);
-      
-      // Límite de tamaño: 8MB para productos
-      allow write: if resource.size < 8 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && isBusinessOwner(businessId)
+        && isValidImageFile(fileName)
+        && request.resource.size < 8 * 1024 * 1024;
     }
     
-    // DOCUMENTOS DE VERIFICACIÓN (RUC, Licencias, etc.)
+    // =============================================
+    // DOCUMENTOS DE VERIFICACIÓN
+    // =============================================
     match /documents/{businessId}/verification/{fileName} {
-      // Solo el dueño del negocio puede subir documentos
       allow read: if request.auth != null && (
         isBusinessOwner(businessId) || 
         hasRole('admin') ||
         hasRole('support')
       );
-      allow write: if request.auth != null && 
-        isBusinessOwner(businessId) &&
-        isValidDocumentFile(fileName);
-      
-      // Límite de tamaño: 15MB para documentos
-      allow write: if resource.size < 15 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && isBusinessOwner(businessId)
+        && isValidDocumentFile(fileName)
+        && request.resource.size < 15 * 1024 * 1024;
     }
     
-    // DOCUMENTOS DE REPARTIDORES (Licencia, etc.)
+    // =============================================
+    // DOCUMENTOS DE REPARTIDORES
+    // =============================================
     match /drivers/{driverId}/documents/{fileName} {
-      // Solo el repartidor o admins pueden gestionar documentos
       allow read: if request.auth != null && (
         request.auth.uid == driverId ||
         hasRole('admin') ||
         hasRole('support')
       );
-      allow write: if request.auth != null && 
-        request.auth.uid == driverId &&
-        isValidDocumentFile(fileName);
-      
-      // Límite de tamaño: 10MB
-      allow write: if resource.size < 10 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && request.auth.uid == driverId
+        && isValidDocumentFile(fileName)
+        && request.resource.size < 10 * 1024 * 1024;
     }
     
-    // CAPTURAS DE PANTALLA DE EVIDENCIA (Entregas)
+    // =============================================
+    // EVIDENCIA DE ENTREGAS
+    // =============================================
     match /delivery_evidence/{orderId}/{fileName} {
-      // Solo el repartidor asignado puede subir evidencia
       allow read: if request.auth != null && (
         isOrderParticipant(orderId) ||
         hasRole('admin') ||
         hasRole('support')
       );
-      allow write: if request.auth != null && 
-        isAssignedDelivery(orderId) &&
-        isValidImageFile(fileName);
-      
-      // Límite de tamaño: 5MB para evidencia
-      allow write: if resource.size < 5 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && isAssignedDelivery(orderId)
+        && isValidImageFile(fileName)
+        && request.resource.size < 5 * 1024 * 1024;
     }
     
-    // CONTENIDO PROMOCIONAL Y BANNERS
+    // =============================================
+    // CONTENIDO PROMOCIONAL
+    // =============================================
     match /promotions/{businessId}/{fileName} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null && (
-        isBusinessOwner(businessId) ||
-        hasRole('admin')
-      ) && isValidImageFile(fileName);
-      
-      // Límite de tamaño: 8MB para promociones
-      allow write: if resource.size < 8 * 1024 * 1024;
+      allow write: if request.auth != null 
+        && (isBusinessOwner(businessId) || hasRole('admin'))
+        && isValidImageFile(fileName)
+        && request.resource.size < 8 * 1024 * 1024;
     }
     
-    // REPORTES Y EXPORTS (Solo lectura para business owners)
+    // =============================================
+    // REPORTES - Solo lectura
+    // =============================================
     match /reports/{businessId}/{fileName} {
       allow read: if request.auth != null && (
         isBusinessOwner(businessId) ||
         hasRole('admin')
       );
-      allow write: if false; // Solo por Cloud Functions
+      allow write: if false;
     }
     
-    // ARCHIVOS DEL SISTEMA (Solo admins)
+    // =============================================
+    // ARCHIVOS DEL SISTEMA
+    // =============================================
     match /system/{fileName} {
-      allow read: if request.auth != null && hasRole('admin');
-      allow write: if request.auth != null && hasRole('admin');
+      allow read, write: if request.auth != null && hasRole('admin');
     }
     
+    // =============================================
+    // ARCHIVOS TEMPORALES
+    // =============================================
+    match /temp/{userId}/{fileName} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == userId
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+    
+    // =============================================
+    // BACKUP DE DATOS
+    // =============================================
+    match /backups/{fileName} {
+      allow read, write: if request.auth != null && hasRole('admin');
+    }
+    
+    // =============================================
+    // LOGS DEL SISTEMA
+    // =============================================
+    match /logs/{logFile} {
+      allow read: if request.auth != null && (
+        hasRole('admin') || 
+        hasRole('support')
+      );
+      allow write: if false;
+    }
+    
+    // =============================================
     // DENEGAR TODO LO DEMÁS
+    // =============================================
     match /{allPaths=**} {
       allow read, write: if false;
     }
     
+    // =============================================
     // FUNCIONES DE VALIDACIÓN
+    // =============================================
+    
+    // Validar archivos de imagen
     function isValidImageFile(fileName) {
-      return fileName.matches('.*\\.(jpg|jpeg|png|webp)$') &&
-             fileName.size() <= 100; // Máximo 100 caracteres en nombre
+      return fileName.matches('.*\\.(jpg|jpeg|png|webp|gif)$') &&
+             fileName.size() <= 255 &&
+             fileName.size() > 0;
     }
     
+    // Validar archivos de documentos
     function isValidDocumentFile(fileName) {
-      return fileName.matches('.*\\.(pdf|jpg|jpeg|png|doc|docx)$') &&
+      return fileName.matches('.*\\.(pdf|jpg|jpeg|png|doc|docx|txt)$') &&
+             fileName.size() <= 255 &&
+             fileName.size() > 0;
+    }
+    
+    // Verificar rol del usuario
+    function hasRole(role) {
+      return request.auth != null && 
+             request.auth.token != null &&
+             'role' in request.auth.token &&
+             request.auth.token.role == role;
+    }
+    
+    // Verificar si es dueño del negocio
+    function isBusinessOwner(businessId) {
+      return request.auth != null && 
+             exists(/databases/(default)/documents/businesses/$(businessId)) &&
+             get(/databases/(default)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
+    }
+    
+    // Verificar participante en orden
+    function isOrderParticipant(orderId) {
+      let order = get(/databases/(default)/documents/orders/$(orderId)).data;
+      return request.auth != null && (
+        order.customerId == request.auth.uid ||
+        order.driverId == request.auth.uid ||
+        isBusinessOwner(order.businessId)
+      );
+    }
+    
+    // Verificar repartidor asignado
+    function isAssignedDelivery(orderId) {
+      return request.auth != null && 
+             exists(/databases/(default)/documents/orders/$(orderId)) &&
+             get(/databases/(default)/documents/orders/$(orderId)).data.driverId == request.auth.uid;
+    }
+    
+    // Verificar si el archivo es una imagen válida del sistema
+    function isSystemImage(fileName) {
+      return fileName.matches('.*\\.(jpg|jpeg|png|svg|webp)$') &&
              fileName.size() <= 100;
     }
     
-    function hasRole(role) {
-      return request.auth.token.role == role;
+    // Verificar límites de subida por usuario
+    function withinUploadLimits() {
+      return request.resource.size < 50 * 1024 * 1024; // 50MB máximo
     }
     
-    function isBusinessOwner(businessId) {
-      return firestore.get(/databases/(default)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
-    }
-    
-    function isOrderParticipant(orderId) {
-      let order = firestore.get(/databases/(default)/documents/orders/$(orderId)).data;
-      return order.customerId == request.auth.uid ||
-             order.driverId == request.auth.uid ||
-             isBusinessOwner(order.businessId);
-    }
-    
-    function isAssignedDelivery(orderId) {
-      return firestore.get(/databases/(default)/documents/orders/$(orderId)).data.driverId == request.auth.uid;
+    // Verificar que el contenido es seguro
+    function isSafeContent() {
+      return request.resource.contentType != null &&
+             request.resource.contentType.matches('image/.*|application/pdf|text/.*');
     }
   }
 }

@@ -142,11 +142,11 @@ api_keys.dart
 # IDE Y EDITORES
 # =============================
 # VS Code
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# .vscode/
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
 
 # Android Studio
 .idea/

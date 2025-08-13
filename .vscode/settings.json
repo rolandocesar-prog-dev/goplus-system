@@ -1,27 +1,131 @@
 {
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit"
+  // Configuración específica para archivos Firebase Rules
+  // CORREGIDO: Cambiar "firebase-rules" por "javascript"
+  "files.associations": {
+    "*.rules": "javascript",
+    "storage.rules": "javascript",
+    "firestore.rules": "javascript",
+    "firebase.json": "json",
+    "firestore.indexes.json": "json"
   },
-  "dart.lineLength": 100,
+  
+  // Configuración del editor para archivos rules
+  // CORREGIDO: Cambiar "[firebase-rules]" por "[javascript]"
+  "[javascript]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.autoIndent": "full",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "never",
+      "source.fixAll.eslint": "never"
+    },
+    // AGREGADO: Mejoras específicas para archivos .rules
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false
+  },
+  
+  // AGREGADO: Deshabilitar validaciones JavaScript para archivos .rules
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false,
+  
+  // MEJORADO: Deshabilitar linting de JavaScript para archivos .rules
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact", 
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.options": {
+    "ignorePattern": [
+      "**/*.rules",
+      "firebase.json",
+      "firestore.indexes.json"
+    ]
+  },
+  
+  // Configuración Firebase
+  "firebase.hosting.enabled": true,
+  "firebase.functions.enabled": true,
+  "firebase.emulators.enabled": true,
+  
+  // AGREGADO: Configuración adicional Firebase
+  "firebase.functions.timeout": 60,
+  "firebase.emulators.ui.enabled": true,
+  
+  // AGREGADO: Mejorar experiencia con archivos Firebase
+  "emmet.includeLanguages": {
+    "javascript": "javascript"
+  },
+  
+  // AGREGADO: Configuración para Flutter/Dart
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  
+  // Excluir archivos innecesarios
   "files.exclude": {
-    "**/.dart_tool": true,
-    "**/.idea": true,
-    "**/.firebase": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
     "**/build": true,
-    "**/.flutter-plugins": true,
-    "**/.flutter-plugins-dependencies": true,
-    "**/.packages": true,
-    "**/*.g.dart": false
+    "**/.dart_tool": true,
+    "**/node_modules": true,
+    "**/.firebase": true,
+    // AGREGADO: Archivos adicionales a excluir
+    "**/*.log": true,
+    "**/.env.local": true,
+    "**/coverage": true
   },
+  
+  // AGREGADO: Configuración de archivos de búsqueda
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/.dart_tool": true,
+    "**/.firebase": true,
+    "**/coverage": true
+  },
+  
+  // AGREGADO: Configuración de watcher
   "files.watcherExclude": {
-    "**/.dart_tool/**": true,
-    "**/.idea/**": true,
-    "**/.firebase/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
     "**/build/**": true,
-    "**/.flutter-plugins/**": true,
-    "**/.flutter-plugins-dependencies/**": true,
-    "**/.packages/**": true
-  }
+    "**/.dart_tool/**": true,
+    "**/.firebase/**": true
+  },
+  
+  // AGREGADO: Configuración de terminal
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": ["-ExecutionPolicy", "Bypass"]
+    }
+  },
+  
+  // AGREGADO: Configuración para trabajar con archivos grandes
+  "editor.largeFileOptimizations": true,
+  "editor.maxTokenizationLineLength": 2000,
+  
+  // AGREGADO: Configuración de Git
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  
+  // AGREGADO: Configuración de extensiones recomendadas
+  "extensions.autoUpdate": true,
+  "extensions.ignoreRecommendations": false
 }
