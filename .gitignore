@@ -28,6 +28,10 @@ firebase-functions-debug.log*
 ui-debug.log
 firebase-emulators-debug.log*
 
+# Firebase Service Account Keys (SENSIBLES - NO INCLUIR)
+**/service-account-*.json
+**/firebase-adminsdk-*.json
+
 # =============================
 # FLUTTER
 # =============================
@@ -55,6 +59,13 @@ coverage/
 **/test/.test_coverage.dart
 
 # =============================
+# MELOS (Monorepo Management)
+# =============================
+.melos_work/
+.packages_gen/
+melos_bootstrap.dart
+
+# =============================
 # ANDROID
 # =============================
 **/android/**/gradle-wrapper.jar
@@ -71,6 +82,10 @@ coverage/
 **/android/app/debug/
 **/android/app/profile/
 **/android/app/release/
+
+# Android keystore files (SENSIBLES)
+**/android/app/*.keystore
+**/android/app/key.properties
 
 # =============================
 # IOS
@@ -104,6 +119,11 @@ coverage/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+# iOS signing and provisioning (SENSIBLES)
+**/ios/**/*.mobileprovision
+**/ios/**/*.p12
+**/ios/**/*.cer
+
 # =============================
 # WEB
 # =============================
@@ -112,6 +132,9 @@ coverage/
 **/web/pubspec.lock
 **/web/.dart_tool/
 **/web/build/
+
+# Web generated files (mantener index.html base)
+**/web/manifest.json
 
 # =============================
 # ARCHIVOS DE CONFIGURACIÓN SENSIBLES
@@ -124,24 +147,19 @@ coverage/
 .env.production
 .env.test
 
-# Firebase config files (if they contain sensitive data)
-# Descomenta estas líneas si tus archivos contienen claves sensibles:
-# **/android/app/google-services.json
-# **/ios/Runner/GoogleService-Info.plist
-# **/web/index.html
-
-# API Keys y secrets
+# API Keys y secrets (SOLO ARCHIVOS SENSIBLES)
 secrets.dart
-api_keys.dart
-**/lib/config/secrets.dart
+**/lib/config/api_keys_prod.dart
+**/lib/config/endpoints_prod.dart
+**/lib/config/secrets_prod.dart
 
-# Database URLs y endpoints privados
-**/lib/config/endpoints.dart
+# Database URLs y endpoints privados (SOLO PRODUCCIÓN)
+**/lib/config/prod_endpoints.dart
 
 # =============================
 # IDE Y EDITORES
 # =============================
-# VS Code
+# VS Code (incluir configuración base del proyecto)
 .vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -167,7 +185,7 @@ api_keys.dart
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-$RECYCLE.BIN/
+$RECYCLE_BIN/
 *.cab
 *.msi
 *.msix
@@ -239,16 +257,35 @@ coverage/
 tmp/
 temp/
 
+# GitHub Actions artifacts
+.github/workflows/artifacts/
+
 # =============================
 # DOCUMENTACIÓN Y ASSETS PESADOS
 # =============================
 # Assets grandes (descomenta si tienes archivos muy pesados)
-# **/assets/videos/
-# **/assets/animations/large/
+# **/assets/videos/large/
+# **/assets/animations/heavy/
+# **/assets/images/raw/
 
-# Documentación generada
-docs/api/
+# Documentación generada automáticamente
+docs/api/generated/
 docs/build/
+doc/api/
+
+# =============================
+# DEPENDENCIAS Y PACKAGES
+# =============================
+# Pub dependencies (Flutter)
+.packages
+.pub/
+.dart_tool/packages
+
+# NPM/Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # =============================
 # PERSONALIZACIONES GOPLUS
@@ -256,15 +293,57 @@ docs/build/
 # Scripts de build temporales
 tools/temp/
 tools/logs/
+tools/output/
 
 # Configuraciones locales de desarrollo
 local.properties
 dev.properties
+local.env
 
 # Archivos de backup
 *.backup
 *.bak
 *.tmp
+*.orig
 
 # Archivos específicos del proyecto que no deberían estar en git
-# (añade aquí archivos específicos de tu proyecto)
+# Cache de herramientas
+.tool-cache/
+.download-cache/
+
+# Configuraciones específicas de usuario
+user.properties
+local_config.dart
+
+# Archivos de prueba temporales
+test_output/
+integration_test/screenshots/
+test/fixtures/temp/
+
+# =============================
+# ARCHIVOS QUE SÍ SE INCLUYEN
+# =============================
+# IMPORTANTE: Los siguientes archivos SÍ deben estar en el repositorio:
+# 
+# Firebase Config (NO sensibles):
+# - **/android/app/google-services.json
+# - **/ios/Runner/GoogleService-Info.plist  
+# - **/web/index.html
+# - firebase.json
+# - apps/*/firebase.json
+# - lib/firebase_options.dart
+#
+# Configuración de proyecto:
+# - pubspec.yaml (todos)
+# - analysis_options.yaml
+# - melos.yaml
+# - README.md files
+# - .vscode/tasks.json
+# - .vscode/launch.json
+# 
+# Scripts y herramientas:
+# - tools/scripts/**/*.ps1
+# - tools/scripts/**/*.sh
+#
+# NOTA: Si algún archivo Firebase contiene claves sensibles reales,
+# muévelo a la sección de archivos sensibles arriba.
