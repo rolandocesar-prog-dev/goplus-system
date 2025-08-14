@@ -24,7 +24,10 @@ android {
     namespace = "com.goplus.repartidor.goplus_repartidor"
     compileSdk = 35  // ✅ ACTUALIZADO: Android SDK 35
     
+    // ✅ CRÍTICO: Habilitar Core Library Desugaring
     compileOptions {
+        // ✅ NUEVO: Habilitar desugaring para APIs de Java 8+
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -33,7 +36,7 @@ android {
         jvmTarget = "1.8"
     }
 
-     // ✅ CRÍTICO: Habilitar buildConfig para campos personalizados
+    // ✅ CRÍTICO: Habilitar buildConfig para campos personalizados
     buildFeatures {
         buildConfig = true
     }
@@ -79,6 +82,9 @@ flutter {
 }
 
 dependencies {
+    // ✅ CRÍTICO: Core Library Desugaring - NUEVA DEPENDENCIA
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    
     // ✅ CORREGIDO: Usar versión específica
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
     
