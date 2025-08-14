@@ -13,6 +13,10 @@ val flutterRoot = localProperties.getProperty("flutter.sdk")
 val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
 val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0.0"
 
+// ✅ AÑADIR: Leer la API key
+val googleMapsApiKey = localProperties.getProperty("GOOGLE_MAPS_API_KEY") 
+    ?: throw GradleException("GOOGLE_MAPS_API_KEY not found in local.properties")
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -22,12 +26,9 @@ plugins {
 
 android {
     namespace = "com.goplus.repartidor.goplus_repartidor"
-    compileSdk = 35  // ✅ ACTUALIZADO: Android SDK 35
+    compileSdk = 35
     
-    // ✅ CRÍTICO: Habilitar Core Library Desugaring
     compileOptions {
-        // ✅ NUEVO: Habilitar desugaring para APIs de Java 8+
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -36,22 +37,21 @@ android {
         jvmTarget = "1.8"
     }
 
-    // ✅ CRÍTICO: Habilitar buildConfig para campos personalizados
     buildFeatures {
         buildConfig = true
     }
     
     defaultConfig {
-        // ✅ CORREGIDO: Debe coincidir con google-services.json
         applicationId = "com.goplus.repartidor.goplus_repartidor"
-        minSdk = 23  // Android 6.0 - Para permisos de ubicación en background
-        targetSdk = 35  // ✅ ACTUALIZADO: Android SDK 35
+        minSdk = 23
+        targetSdk = 35
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
         
         multiDexEnabled = true
         
-        // Configuración específica para repartidor
+        // ✅ AÑADIR: Configurar placeholders
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
         manifestPlaceholders["appAuthRedirectScheme"] = "com.goplus.repartidor.goplus_repartidor"
     }
     
@@ -64,8 +64,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            
-            // Optimizaciones para background location
             buildConfigField("boolean", "ENABLE_LOCATION_TRACKING", "true")
         }
         
@@ -82,10 +80,6 @@ flutter {
 }
 
 dependencies {
-    // ✅ CRÍTICO: Core Library Desugaring - NUEVA DEPENDENCIA
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-    
-    // ✅ CORREGIDO: Usar versión específica
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
     
     // Firebase BoM
@@ -93,17 +87,16 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging")
     
-    // Google Play Services - Versiones específicas para repartidor
+    // Google Play Services
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     
-    // Background location tracking
-    implementation("androidx.work:work-runtime:2.9.0")
+    // ✅ ACTUALIZAR: WorkManager con versiones más estables
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     
     // MultiDex support
     implementation("androidx.multidex:multidex:2.0.1")
     
-    // Lifecycle components para servicios
+    // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-service:2.7.0")
 }

@@ -1,5 +1,5 @@
 name: goplus_repartidor
-description: "GoPlus Repartidor - App para deliverys"
+description: "GoPlus Repartidor - App para deliverys con tracking en tiempo real"
 publish_to: "none"
 
 version: 1.0.0+1
@@ -12,7 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # GoPlus packages
+  # ========================================
+  # GOPLUS PACKAGES - ARQUITECTURA MODULAR
+  # ========================================
   goplus_core:
     path: ../../packages/goplus_core
   goplus_firebase:
@@ -20,78 +22,212 @@ dependencies:
   goplus_ui:
     path: ../../packages/goplus_ui
 
-  # State Management
+  # ========================================
+  # STATE MANAGEMENT - BLOC PATTERN
+  # ========================================
   flutter_bloc: ^8.1.6
+  # equatable ya está incluido en goplus_core
+  bloc_concurrency: ^0.2.5  # Control de concurrencia
 
-  # Navigation
+  # ========================================
+  # NAVIGATION - MODERN ROUTING
+  # ========================================
   go_router: ^14.6.0
 
   # ========================================
-  # UBICACIÓN - PLUGINS MODERNOS Y ESTABLES
+  # UBICACIÓN & TRACKING - CORE REPARTIDOR
   # ========================================
   
-  # ✅ RECOMENDADO: Plugin principal de ubicación (actualizado y estable)
+  # ✅ PRINCIPAL: Plugin de ubicación compatible con cliente
   geolocator: ^13.0.2
   
-  # ✅ ALTERNATIVA: Plugin de ubicación con mejor control
-  location: ^7.0.0
+  # ✅ BACKGROUND TASKS: Para tracking continuo
+  workmanager: ^0.5.1
   
-  # ✅ BACKGROUND TASKS: WorkManager moderno para tareas en segundo plano
-  workmanager: ^0.5.2
-  
-  # ✅ PERMISSOS: Gestión moderna de permisos
+  # ✅ PERMISOS: Gestión moderna de permisos
   permission_handler: ^11.3.1
+  
+  # ✅ CONECTIVIDAD: Monitorear conexión
+  connectivity_plus: ^6.0.5
 
-  # Maps & Navigation
+  # ========================================
+  # MAPAS & NAVEGACIÓN
+  # ========================================
   google_maps_flutter: ^2.9.0
   google_polyline_algorithm: ^3.1.0
+  
+  # ✅ RUTAS: Cálculo de distancias y rutas
+  geolocator_platform_interface: ^4.2.3
 
-  # QR Scanner
+  # ========================================
+  # SCANNERS - QR/CÓDIGOS DE ENTREGA
+  # ========================================
+  # ✅ COMPATIBLE: Misma versión que cliente
   mobile_scanner: ^5.0.4
-
-  # Push Notifications
+  
+  # ========================================
+  # FIREBASE & NOTIFICATIONS
+  # ========================================
+  
+  # ✅ NOTIFICACIONES LOCALES: Alertas importantes
   flutter_local_notifications: ^17.2.3
+  
+  # ✅ NOTIFICACIONES PUSH: Ya incluido en goplus_firebase
+  # firebase_messaging: incluido en goplus_firebase
 
-  # Network & Connectivity
-  connectivity_plus: ^6.0.5
-  dio: ^5.7.0
-
-  # Storage & Cache
-  shared_preferences: ^2.3.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-
-  # Phone calls
+  # ========================================
+  # COMUNICACIÓN & NETWORKING
+  # ========================================
+  dio: ^5.7.0  # HTTP client robusto
+  pretty_dio_logger: ^1.4.0  # Logging para debug
+  
+  # ✅ LLAMADAS: Para contactar clientes
   url_launcher: ^6.3.1
 
-  # Image handling
-  image_picker: ^1.1.2
-  cached_network_image: ^3.4.1
+  # ========================================
+  # STORAGE & CACHE
+  # ========================================
+  shared_preferences: ^2.2.2  # Configuraciones simples - compatible con goplus_core
+  hive: ^2.2.3  # Base de datos local rápida
+  hive_flutter: ^1.1.0
+  
+  # ✅ cached_network_image ya incluido en goplus_ui
 
-  # UI/UX
+  # ========================================
+  # MULTIMEDIA - FOTOS DE ENTREGA
+  # ========================================
+  image_picker: ^1.1.2  # Cámara y galería
+  path_provider: ^2.1.4  # Rutas de almacenamiento
+  
+  # ========================================
+  # UI/UX - INTERFAZ ESPECÍFICA REPARTIDOR
+  # ========================================
   cupertino_icons: ^1.0.8
-  flutter_svg: ^2.0.10+1
+  # flutter_svg ya incluido en goplus_ui
+  
+  # ✅ ANIMACIONES: Para feedback visual
+  lottie: ^3.1.2
+  
+  # ✅ shimmer ya incluido en goplus_ui
+  
+  # ✅ REFRESH: Pull to refresh
+  pull_to_refresh: ^2.0.0
+
+  # ========================================
+  # UTILIDADES ESPECÍFICAS REPARTIDOR
+  # ========================================
+  
+  # ✅ AUDIO: Notificaciones sonoras
+  just_audio: ^0.9.40
+  
+  # ✅ VIBRACIÓN: Feedback háptico
+  vibration: ^2.0.0
+  
+  # ✅ DEVICE INFO: Información del dispositivo
+  device_info_plus: ^10.1.2
+  
+  # ✅ BATTERY: Optimización de batería
+  battery_plus: ^6.0.3
+  
+  # ✅ SCREEN: Mantener pantalla activa durante entregas
+  wakelock_plus: ^1.2.8
+
+  # ========================================
+  # VALIDACIONES & FORMATEO
+  # ========================================
+  # ✅ CORREGIDO: Usar misma versión que goplus_core
+  intl: ^0.18.1  # Formateo de fechas y números
+  mask_text_input_formatter: ^2.9.0  # Formateo de inputs
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
-  build_runner: ^2.4.13
-  hive_generator: ^2.0.1
+  
+  # ========================================
+  # LINTING & CODE QUALITY
+  # ========================================
+  # ✅ COMPATIBLE: Misma versión que otros packages
+  flutter_lints: ^3.0.0
+  
+  # ========================================
+  # BUILD TOOLS
+  # ========================================
+  # ✅ COMPATIBLE: Misma versión que otros packages
+  build_runner: ^2.4.7
+  hive_generator: ^2.0.1  # Para generar adapters de Hive
+  
+  # ========================================
+  # TESTING ESPECÍFICO REPARTIDOR
+  # ========================================
+  mockito: ^5.4.4  # Mocks para testing
+  bloc_test: ^9.1.7  # Testing de BLoCs
+  
+  # ========================================
+  # PERFORMANCE & MONITORING
+  # ========================================
+  flutter_driver:
+    sdk: flutter
 
+# ========================================
+# CONFIGURACIÓN FLUTTER
+# ========================================
 flutter:
   uses-material-design: true
   
-  # Assets específicos del repartidor
+  # ========================================
+  # ASSETS ESPECÍFICOS DEL REPARTIDOR
+  # ========================================
   # assets:
-  #   - assets/images/
-  #   - assets/icons/
-  #   - assets/sounds/
+  #   # Iconos específicos
+  #   - assets/icons/delivery/
+  #   - assets/icons/navigation/
+  #   - assets/icons/status/
     
-  # Fuentes
+  #   # Imágenes de la app
+  #   - assets/images/onboarding/
+  #   - assets/images/placeholders/
+  #   - assets/images/badges/
+    
+  #   # Sonidos de notificación
+  #   - assets/sounds/notification.mp3
+  #   - assets/sounds/new_order.mp3
+  #   - assets/sounds/delivery_complete.mp3
+    
+  #   # Animaciones Lottie
+  #   - assets/animations/loading.json
+  #   - assets/animations/delivery_success.json
+  #   - assets/animations/gps_searching.json
+    
+    # Mapas offline (opcional)
+    # - assets/maps/offline/
+  
+  # ========================================
+  # FUENTES OPTIMIZADAS PARA REPARTIDOR
+  # ========================================
   # fonts:
-  #   - family: Roboto
+  #   - family: Inter
   #     fonts:
-  #       - asset: assets/fonts/Roboto-Regular.ttf
-  #       - asset: assets/fonts/Roboto-Bold.ttf
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #       - asset: assets/fonts/Inter-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+  #       - asset: assets/fonts/Inter-Bold.ttf
   #         weight: 700
+    
+    # Fuente para números grandes (earnings, distancias)
+    # - family: JetBrainsMono
+    #   fonts:
+    #     - asset: assets/fonts/JetBrainsMono-Regular.ttf
+    #     - asset: assets/fonts/JetBrainsMono-Bold.ttf
+    #       weight: 700
+
+# ========================================
+# CONFIGURACIONES ESPECÍFICAS FLUTTER
+# ========================================
+# flutter_intl:
+#   enabled: true
+#   class_name: S
+#   main_locale: es
+#   arb_dir: lib/l10n
+#   output_dir: lib/generated

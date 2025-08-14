@@ -24,7 +24,10 @@ android {
     namespace = "com.goplus.cliente.goplus_cliente"
     compileSdk = 35  // ✅ ACTUALIZADO: Android SDK 35
     
+    // ✅ CRÍTICO: Habilitar Core Library Desugaring
     compileOptions {
+        // ✅ NUEVO: Habilitar desugaring para APIs de Java 8+
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -36,7 +39,7 @@ android {
     defaultConfig {
         // ✅ CORREGIDO: Debe coincidir con google-services.json
         applicationId = "com.goplus.cliente.goplus_cliente"
-        minSdk = 21
+        minSdk = 21  // Android 5.0 - Soporte amplio para clientes
         targetSdk = 35  // ✅ ACTUALIZADO: Android SDK 35
         versionCode = flutterVersionCode.toInt()
         versionName = flutterVersionName
@@ -73,6 +76,9 @@ flutter {
 }
 
 dependencies {
+    // ✅ CRÍTICO: Core Library Desugaring - NUEVA DEPENDENCIA
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    
     // ✅ CORREGIDO: Usar versión específica
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
     
@@ -87,4 +93,8 @@ dependencies {
     
     // MultiDex support
     implementation("androidx.multidex:multidex:2.0.1")
+    
+    // Soporte adicional para funcionalidades de cliente
+    implementation("androidx.work:work-runtime:2.9.0")
+    implementation("androidx.lifecycle:lifecycle-service:2.7.0")
 }

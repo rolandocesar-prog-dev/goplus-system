@@ -110,7 +110,7 @@
         <!-- ========================================= -->
         <!-- RECEIVERS PARA WORKMANAGER -->
         <!-- ========================================= -->
-        <receiver
+        <!-- <receiver
             android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
             android:enabled="true"
             android:exported="true"
@@ -119,7 +119,7 @@
         <receiver
             android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false" /> -->
         
         <!-- ========================================= -->
         <!-- FLUTTER & GOOGLE MAPS -->
