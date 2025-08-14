@@ -9,26 +9,30 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
-    <!-- ⚠️ CRÍTICO: Ubicación en tiempo real -->
+    <!-- ⚠️ CRÍTICO: Ubicación en tiempo real con geolocator -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     
-    <!-- ⚠️ CRÍTICO: Servicios en primer plano -->
+    <!-- ⚠️ CRÍTICO: Servicios en primer plano para tracking -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    
+    <!-- WorkManager para tareas en background -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     
     <!-- Cámara: Confirmar entregas -->
     <uses-permission android:name="android.permission.CAMERA" />
     
-    <!-- Notificaciones críticas -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
-    <!-- Opcional: Llamadas -->
+    <!-- Opcional: Llamadas al cliente -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     
-    <!-- Features críticas -->
+    <!-- Notificaciones -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    
+    <!-- Features requeridas -->
     <uses-feature 
         android:name="android.hardware.location.gps" 
         android:required="true" />
@@ -77,12 +81,26 @@
         </activity>
         
         <!-- ========================================= -->
-        <!-- SERVICIOS CRÍTICOS PARA REPARTIDOR -->
+        <!-- SERVICIOS PARA WORKMANAGER & GEOLOCATOR -->
         <!-- ========================================= -->
         
-        <!-- Firebase Messaging -->
+        <!-- WorkManager: Tareas en background -->
         <service
-            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="location"
+            tools:node="merge" />
+        
+        <!-- Geolocator: Servicio de ubicación en foreground -->
+        <service
+            android:name="com.baseflow.geolocator.GeolocatorLocationService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
+        
+        <!-- ========================================= -->
+        <!-- FIREBASE MESSAGING -->
+        <!-- ========================================= -->
+        <service
+            android:name="com.google.firebase.messaging.FirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -90,45 +108,40 @@
         </service>
         
         <!-- ========================================= -->
-        <!-- RECEIVERS -->
+        <!-- RECEIVERS PARA WORKMANAGER -->
         <!-- ========================================= -->
-        
-        <!-- ✅ CORREGIDO: Firebase messaging receiver -->
-        <receiver 
-            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+        <receiver
+            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+            android:enabled="true"
             android:exported="true"
-            tools:replace="android:exported">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </receiver>
+            tools:ignore="ExportedReceiver" />
+        
+        <receiver
+            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
         
         <!-- ========================================= -->
-        <!-- METADATA -->
+        <!-- FLUTTER & GOOGLE MAPS -->
         <!-- ========================================= -->
         
-        <!-- Flutter embedding -->
+        <!-- API Key para Google Maps (desde Firebase) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_API_KEY}" />
+        
+        <!-- Flutter embedding versión 2 -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        
-        <!-- Google Maps API Key -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDeuGnaqTCnspLvyNtLQic7TToxRpZI3So" />
-        
-        <!-- Firebase Cloud Messaging -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_delivery_notification" />
-        
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/orange_primary" />
-        
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="delivery_channel" />
             
+        <!-- ========================================= -->
+        <!-- PROVIDER PARA GEOLOCATOR -->
+        <!-- ========================================= -->
+        <provider
+            android:name="com.baseflow.geolocator.GeolocatorLocationProvider"
+            android:authorities="${applicationId}.flutter.geolocator"
+            android:exported="false" />
+
     </application>
 </manifest>

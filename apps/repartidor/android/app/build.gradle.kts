@@ -32,6 +32,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+     // ✅ CRÍTICO: Habilitar buildConfig para campos personalizados
+    buildFeatures {
+        buildConfig = true
+    }
     
     defaultConfig {
         // ✅ CORREGIDO: Debe coincidir con google-services.json
