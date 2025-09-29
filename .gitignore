@@ -1,0 +1,20 @@
+node_modules/
+.turbo/
+.env*.local
+.env.firebase
+*.log
+dist/
+build/
+.firebase/
+*.cache
+.DS_Store
+
+# Flutter
+**/pubspec.lock
+**/.dart_tool/
+**/.flutter-plugins*
+
+# Firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

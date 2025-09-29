@@ -1,0 +1,69 @@
+// firebase/rules/firestore.rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Funciones helper
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasRole(role) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    function isBusinessOwner(businessId) {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid;
+    }
+
+    // USUARIOS - Perfil básico
+    match /users/{userId} {
+      allow read: if isOwner(userId) || hasRole('admin');
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) && 
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'createdAt']);
+      allow delete: if hasRole('admin');
+    }
+
+    // NEGOCIOS - Solo dueños y admin
+    match /businesses/{businessId} {
+      allow read: if true; // Público para catálogo
+      allow create: if hasRole('business') || hasRole('admin');
+      allow update: if isBusinessOwner(businessId) || hasRole('admin');
+      allow delete: if hasRole('admin');
+      
+      // Productos del negocio
+      match /products/{productId} {
+        allow read: if true;
+        allow write: if isBusinessOwner(businessId) || hasRole('admin');
+      }
+    }
+
+    // PEDIDOS - Acceso según rol
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (
+        resource.data.customerId == request.auth.uid ||
+        resource.data.driverId == request.auth.uid ||
+        resource.data.businessId in request.auth.token.businessIds ||
+        hasRole('admin')
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        (resource.data.customerId == request.auth.uid && resource.data.status == 'pending') ||
+        (resource.data.driverId == request.auth.uid && resource.data.status in ['assigned', 'picking', 'delivering']) ||
+        hasRole('admin')
+      );
+    }
+
+    // CONFIGURACIÓN GLOBAL - Solo admin
+    match /config/{document=**} {
+      allow read: if true;
+      allow write: if hasRole('admin');
+    }
+  }
+}

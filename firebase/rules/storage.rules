@@ -1,0 +1,40 @@
+// firebase/rules/storage.rules
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Funciones helper
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function maxSize(mb) {
+      return request.resource.size < mb * 1024 * 1024;
+    }
+
+    // Profile pictures
+    match /users/{userId}/profile/{fileName} {
+      allow read: if true;
+      allow write: if isOwner(userId) && isImage() && maxSize(5);
+    }
+    
+    // Business images
+    match /businesses/{businessId}/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isImage() && maxSize(10);
+    }
+    
+    // Product images
+    match /products/{productId}/{fileName} {
+      allow read: if true;
+      allow write: if isAuthenticated() && isImage() && maxSize(5);
+    }
+  }
+}

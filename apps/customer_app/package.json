@@ -1,0 +1,11 @@
+{
+  "name": "@goplus/customer-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "flutter run",
+    "build": "flutter build apk --release && flutter build ios --release",
+    "test": "flutter test",
+    "lint": "flutter analyze"
+  }
+}
