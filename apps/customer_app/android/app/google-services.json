@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "969245933117",
+    "project_id": "goplus-system-d647e",
+    "storage_bucket": "goplus-system-d647e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969245933117:android:833702d565e46b78c4b454",
+        "android_client_info": {
+          "package_name": "com.goplus.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969245933117-fl2cnfv9nblbv5ji0j4gs50t7sdi5imq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.goplus.customer",
+            "certificate_hash": "cd7bde6a647e0fbbf2af4228c5c124deffd2add6"
+          }
+        },
+        {
+          "client_id": "969245933117-il9t7540k6i8vckrdi4rb7s7tij819kk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEQk8oS1teyjkPJyWBi7cr1ap6RXwrKPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969245933117-il9t7540k6i8vckrdi4rb7s7tij819kk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969245933117-b5m72cq7u8blvqmp98mfl3agig12h85t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goplus.customer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969245933117:android:4b8369823bce8b83c4b454",
+        "android_client_info": {
+          "package_name": "com.goplus.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969245933117-il9t7540k6i8vckrdi4rb7s7tij819kk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEQk8oS1teyjkPJyWBi7cr1ap6RXwrKPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969245933117-il9t7540k6i8vckrdi4rb7s7tij819kk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969245933117-b5m72cq7u8blvqmp98mfl3agig12h85t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.goplus.customer"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
