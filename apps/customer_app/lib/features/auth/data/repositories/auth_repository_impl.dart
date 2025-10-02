@@ -2,16 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/user_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final UserRepository _userRepository;
 
   AuthRepositoryImpl({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    required UserRepository userRepository,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+        _googleSignIn = googleSignIn ?? GoogleSignIn(),
+        _userRepository = userRepository;
 
   @override
   Stream<UserEntity?> get authStateChanges {
@@ -54,8 +58,21 @@ class AuthRepositoryImpl implements AuthRepository {
         throw Exception('Error al autenticar con Firebase');
       }
 
-      return _mapFirebaseUserToEntity(userCredential.user!);
+      final userEntity = _mapFirebaseUserToEntity(userCredential.user!);
+
+      // Crear o actualizar usuario en Firestore
+      print('🔥 Intentando crear usuario en Firestore: ${userEntity.uid}');
+      try {
+        await _userRepository.createOrUpdateUser(userEntity);
+        print('✅ Usuario creado/actualizado en Firestore exitosamente');
+      } catch (firestoreError) {
+        print('❌ Error al guardar en Firestore: $firestoreError');
+        rethrow;
+      }
+
+      return userEntity;
     } catch (e) {
+      print('❌ Error en Google Sign-In: $e');
       throw Exception('Error en Google Sign-In: $e');
     }
   }

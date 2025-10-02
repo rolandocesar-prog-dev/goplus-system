@@ -1,11 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/repositories/auth_repository_impl.dart';
+import '../../data/repositories/user_repository_impl.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/user_repository.dart';
+
+/// Provider del repositorio de usuarios
+final userRepositoryProvider = Provider<UserRepository>((ref) {
+  return UserRepositoryImpl();
+});
 
 /// Provider del repositorio de autenticación
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  return AuthRepositoryImpl();
+  final userRepository = ref.watch(userRepositoryProvider);
+  return AuthRepositoryImpl(userRepository: userRepository);
 });
 
 /// Provider del estado de autenticación (stream)
