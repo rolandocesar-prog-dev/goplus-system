@@ -12,11 +12,20 @@ void main() async {
 
   // Cargar variables de entorno según el ambiente
   const environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'development');
-  await dotenv.load(fileName: '.env.$environment');
+  try {
+    await dotenv.load(fileName: '.env.$environment');
+  } catch (e) {
+    debugPrint('Error loading .env file: $e');
+    // Continuar sin el archivo .env si falla
+  }
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Error initializing Firebase: $e');
+  }
 
   runApp(const ProviderScope(child: MyApp()));
 }
