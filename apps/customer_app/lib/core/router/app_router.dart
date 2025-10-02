@@ -8,6 +8,7 @@ import '../../features/home/presentation/screens/main_screen.dart';
 import '../../features/home/presentation/screens/home_tab_screen.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/personal_info_screen.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -64,6 +65,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/profile',
                 builder: (context, state) => const ProfileScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'personal-info',
+                    builder: (context, state) => const PersonalInfoScreen(),
+                  ),
+                ],
               ),
             ],
           ),

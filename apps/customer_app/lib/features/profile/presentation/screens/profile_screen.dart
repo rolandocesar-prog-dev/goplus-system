@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -70,7 +71,7 @@ class ProfileScreen extends ConsumerWidget {
                         color: theme.colorScheme.secondary.withOpacity(0.4),
                       ),
                       onTap: () {
-                        // TODO: Navegar a información personal
+                        context.go('/profile/personal-info');
                       },
                     ),
                     const Divider(height: 1),
