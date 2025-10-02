@@ -11,10 +11,10 @@ class HomeTabScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('GoPlus Customer'),
+        title: const Text('GoPlus'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_rounded),
             onPressed: () async {
               final authController = ref.read(authControllerProvider);
               await authController.signOut();

@@ -5,34 +5,30 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mis Pedidos'),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.receipt_long,
+              Icons.receipt_long_rounded,
               size: 64,
-              color: Colors.grey,
+              color: theme.colorScheme.secondary.withOpacity(0.3),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'No tienes pedidos aún',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
+              style: theme.textTheme.titleLarge,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Aquí aparecerán tus pedidos activos e históricos',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: theme.textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
           ],

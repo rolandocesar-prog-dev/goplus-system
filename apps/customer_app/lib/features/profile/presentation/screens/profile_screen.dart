@@ -8,6 +8,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(authStateProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,24 +31,25 @@ class ProfileScreen extends ConsumerWidget {
                         backgroundImage: NetworkImage(user.photoUrl!),
                       )
                     else
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 60,
-                        child: Icon(Icons.person, size: 60),
+                        backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+                        child: Icon(
+                          Icons.person_rounded,
+                          size: 60,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     const SizedBox(height: 16),
                     Text(
                       user.displayName ?? 'Usuario',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.displaySmall,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       user.email,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.secondary.withOpacity(0.6),
                       ),
                     ),
                   ],
@@ -58,36 +60,60 @@ class ProfileScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.person),
+                      leading: Icon(
+                        Icons.person_outline_rounded,
+                        color: theme.colorScheme.secondary,
+                      ),
                       title: const Text('Información personal'),
-                      trailing: const Icon(Icons.chevron_right),
+                      trailing: Icon(
+                        Icons.chevron_right_rounded,
+                        color: theme.colorScheme.secondary.withOpacity(0.4),
+                      ),
                       onTap: () {
                         // TODO: Navegar a información personal
                       },
                     ),
                     const Divider(height: 1),
                     ListTile(
-                      leading: const Icon(Icons.location_on),
+                      leading: Icon(
+                        Icons.location_on_outlined,
+                        color: theme.colorScheme.secondary,
+                      ),
                       title: const Text('Direcciones guardadas'),
-                      trailing: const Icon(Icons.chevron_right),
+                      trailing: Icon(
+                        Icons.chevron_right_rounded,
+                        color: theme.colorScheme.secondary.withOpacity(0.4),
+                      ),
                       onTap: () {
                         // TODO: Navegar a direcciones
                       },
                     ),
                     const Divider(height: 1),
                     ListTile(
-                      leading: const Icon(Icons.payment),
+                      leading: Icon(
+                        Icons.payment_outlined,
+                        color: theme.colorScheme.secondary,
+                      ),
                       title: const Text('Métodos de pago'),
-                      trailing: const Icon(Icons.chevron_right),
+                      trailing: Icon(
+                        Icons.chevron_right_rounded,
+                        color: theme.colorScheme.secondary.withOpacity(0.4),
+                      ),
                       onTap: () {
                         // TODO: Navegar a métodos de pago
                       },
                     ),
                     const Divider(height: 1),
                     ListTile(
-                      leading: const Icon(Icons.settings),
+                      leading: Icon(
+                        Icons.settings_outlined,
+                        color: theme.colorScheme.secondary,
+                      ),
                       title: const Text('Configuración'),
-                      trailing: const Icon(Icons.chevron_right),
+                      trailing: Icon(
+                        Icons.chevron_right_rounded,
+                        color: theme.colorScheme.secondary.withOpacity(0.4),
+                      ),
                       onTap: () {
                         // TODO: Navegar a configuración
                       },
@@ -98,10 +124,13 @@ class ProfileScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.logout, color: Colors.red),
-                  title: const Text(
+                  leading: Icon(
+                    Icons.logout_rounded,
+                    color: theme.colorScheme.error,
+                  ),
+                  title: Text(
                     'Cerrar sesión',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: theme.colorScheme.error),
                   ),
                   onTap: () async {
                     final authController = ref.read(authControllerProvider);
