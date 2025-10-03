@@ -19,8 +19,21 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<UserEntity?> get authStateChanges {
-    return _firebaseAuth.authStateChanges().map((user) {
+    return _firebaseAuth.authStateChanges().asyncMap((user) async {
       if (user == null) return null;
+
+      // Intentar obtener los datos completos desde Firestore
+      try {
+        final firestoreUser = await _userRepository.getUserById(user.uid);
+        // Si existe en Firestore, retornar esos datos (incluye phone y address)
+        if (firestoreUser != null) {
+          return firestoreUser;
+        }
+      } catch (e) {
+        print('⚠️ No se pudo obtener usuario de Firestore: $e');
+      }
+
+      // Si no está en Firestore, retornar solo datos de Firebase Auth
       return _mapFirebaseUserToEntity(user);
     });
   }
