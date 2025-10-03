@@ -45,6 +45,34 @@ class AuthController {
     return await authRepository.signInWithGoogle();
   }
 
+  /// Iniciar sesión con email y contraseña
+  Future<UserEntity> signInWithEmailPassword({
+    required String email,
+    required String password,
+  }) async {
+    return await authRepository.signInWithEmailPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  /// Registrarse con email y contraseña
+  Future<UserEntity> signUpWithEmailPassword({
+    required String email,
+    required String password,
+    String? displayName,
+    String? phoneNumber,
+    String? address,
+  }) async {
+    return await authRepository.signUpWithEmailPassword(
+      email: email,
+      password: password,
+      displayName: displayName,
+      phoneNumber: phoneNumber,
+      address: address,
+    );
+  }
+
   /// Cerrar sesión
   Future<void> signOut() async {
     await authRepository.signOut();

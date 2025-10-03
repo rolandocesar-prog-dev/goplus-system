@@ -12,6 +12,7 @@ _UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
   displayName: json['displayName'] as String?,
   photoUrl: json['photoUrl'] as String?,
   phoneNumber: json['phoneNumber'] as String?,
+  address: json['address'] as String?,
   isActive: json['isActive'] as bool? ?? false,
   createdAt: json['createdAt'] == null
       ? null
@@ -28,6 +29,7 @@ Map<String, dynamic> _$UserEntityToJson(_UserEntity instance) =>
       'displayName': instance.displayName,
       'photoUrl': instance.photoUrl,
       'phoneNumber': instance.phoneNumber,
+      'address': instance.address,
       'isActive': instance.isActive,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
