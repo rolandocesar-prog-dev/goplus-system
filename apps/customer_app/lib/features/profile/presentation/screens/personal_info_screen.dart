@@ -87,6 +87,14 @@ class PersonalInfoScreen extends ConsumerWidget {
                 value: user.phoneNumber ?? 'No especificado',
                 theme: theme,
               ),
+              const SizedBox(height: 12),
+
+              _InfoCard(
+                icon: Icons.location_on_outlined,
+                label: 'Dirección',
+                value: user.address ?? 'No especificado',
+                theme: theme,
+              ),
 
               const SizedBox(height: 32),
               _buildSectionTitle('Cuenta', theme),
