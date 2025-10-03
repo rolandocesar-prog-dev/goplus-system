@@ -34,6 +34,7 @@ class UserRepositoryImpl implements UserRepository {
           'displayName': user.displayName,
           'photoUrl': user.photoUrl,
           'phoneNumber': user.phoneNumber,
+          'address': user.address,
           'updatedAt': FieldValue.serverTimestamp(),
         });
         print('✅ Usuario actualizado correctamente');
@@ -45,6 +46,7 @@ class UserRepositoryImpl implements UserRepository {
           'displayName': user.displayName,
           'photoUrl': user.photoUrl,
           'phoneNumber': user.phoneNumber,
+          'address': user.address,
           'isActive': true,
           'createdAt': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
