@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/theme/theme_provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -119,6 +120,8 @@ class ProfileScreen extends ConsumerWidget {
                         // TODO: Navegar a configuración
                       },
                     ),
+                    const Divider(height: 1),
+                    _buildThemeToggle(context, ref, theme),
                   ],
                 ),
               ),
@@ -146,6 +149,27 @@ class ProfileScreen extends ConsumerWidget {
         error: (error, stack) => Center(
           child: Text('Error: $error'),
         ),
+      ),
+    );
+  }
+
+  Widget _buildThemeToggle(BuildContext context, WidgetRef ref, ThemeData theme) {
+    final themeMode = ref.watch(themeProvider);
+    final themeNotifier = ref.read(themeProvider.notifier);
+    final isDark = themeMode == ThemeMode.dark;
+
+    return ListTile(
+      leading: Icon(
+        isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+        color: theme.colorScheme.secondary,
+      ),
+      title: const Text('Modo oscuro'),
+      trailing: Switch(
+        value: isDark,
+        onChanged: (value) {
+          themeNotifier.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+        },
+        activeColor: theme.colorScheme.primary,
       ),
     );
   }
